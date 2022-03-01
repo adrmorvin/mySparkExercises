@@ -1,3 +1,4 @@
+import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.{DataFrame, SaveMode}
 
 object exer1 extends App{
@@ -14,9 +15,9 @@ object exer1 extends App{
   //Una vez que ya tenemos los datos observamos el schema
   productDF.printSchema()
   //Realizamos los filtros correspondientes (2-3)
-  val sol1 = productDF.where("product_price<= '23' and product_price>= '20'").filter(productDF("product_name").startsWith("Nike"))
+  val sol1 = productDF.filter(col("product_name").startsWith("Nike") and col("product_price").leq("23") and col("product_price").geq("20"))
   //Mostramos el resultado obtenido
-  sol1.show()
+  //sol1.show()
   //Guardamos el fichero con la compresion gZip
   sol1.write.mode(SaveMode.Overwrite).option("codec", "org.apache.hadoop.io.compress.GzipCodec").csv("dataset/q1/solution")
 

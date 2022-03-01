@@ -1,4 +1,5 @@
-import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.{DataFrame, SaveMode}
+import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
 
 object exer4 extends App {
@@ -15,11 +16,11 @@ object exer4 extends App {
     StructField("name", StringType,true)))
   implicit val categoriesDF: DataFrame = MainRead.readCsvSchema("src/main/resources/retail_db/categories/part-m-00000",myschema)
   //Comprobamos que se ha creado bien
-  categoriesDF.show
+  //categoriesDF.show
   // Hacemos el filtro Soccer
-  val soccersol = categoriesDF.where("name == 'Soccer'")
+  val soccersol = categoriesDF.filter(col("name").equalTo("Soccer"))
   //Vemos que esta bien
-  soccersol.show()
+  //soccersol.show()
   //Guardamos en txt
-  soccersol.rdd.map(_.toString().replace("[","").replace("]", "")).saveAsTextFile("dataset/q4/solution")
+  soccersol.write.mode(SaveMode.Overwrite).option("sep", "|").csv("dataset/q4/solution")
 }

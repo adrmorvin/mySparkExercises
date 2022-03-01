@@ -1,6 +1,5 @@
 import org.apache.spark.sql.{DataFrame, SaveMode}
-import org.apache.spark.sql.functions.{col, date_format, from_unixtime, to_date, year}
-import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
+import org.apache.spark.sql.functions.{col, date_format, from_unixtime, month, to_date, year}
 
 object exer5 extends App {
 
@@ -13,23 +12,29 @@ object exer5 extends App {
 * 5. Guardar en json
 * */
   //Si no tuviera cabecera o quiseramos cambiar algun tipo como la fecha sería así
- val myschema= StructType(Array(
-    StructField("id", IntegerType,true),
-    StructField("order_date", StringType,true),
+/*
+  val myschema= StructType(Array(
+    StructField("id", StringType,true),
+    StructField("order_date", LongType,true),
     StructField("customer_id", IntegerType,true),
-    StructField("status", StringType,true)))
-
-  implicit val ordersDF: DataFrame = MainRead.readParquet("src/main/resources/retail_db/orders_parquet/741ca897-c70e-4633-b352-5dc3414c5680.parquet",myschema)
+    StructField("order_status", StringType,true)))
+*/
+  implicit val ordersDF: DataFrame = MainRead.readParquet("src/main/resources/retail_db/orders_parquet/741ca897-c70e-4633-b352-5dc3414c5680.parquet")
 // Comprobamos que los datos esten bien
-ordersDF.show()
-//realizamos todos los filtros
-  val sol5 = ordersDF.select(ordersDF.col("order_id"),ordersDF.col("order_status"),to_date(ordersDF.col("order_date"), "dd/MM/yyyy")).as("dateM")
-    .where("order_status =='COMPLETE'").filter("year(dateM) == 2014 and month(dateM) == (01 or 07)")
+ // ordersDF.show()
+
+  val ordDF = ordersDF.filter(col("order_status").equalTo("COMPLETE")).select(col("order_id"),
+      to_date(from_unixtime(col("order_date")/1000,"yyyy-MM-dd HH:mm:ss"),"yyyy-MM-dd HH:mm:ss").as("order_date"),
+      col("order_status"))
+    val sol5 = ordDF.filter(year(col("order_date")).equalTo(2014) and
+      (month(col("order_date")).equalTo(1) or month(col("order_date")).equalTo(7)))
+    .select(col("order_id"),
+      date_format(col("order_date"),"dd-MM-yyyy").as("order_date"),
+      col("order_status"))
 //Vemos que nos sale
-  sol5.show()
+ // sol5.show()
 
 //Lo guardamos
-
-  //sol5.write.mode(SaveMode.Overwrite).json("dataset/q5/solution/porfecha.json")
+  sol5.write.mode(SaveMode.Overwrite).json("dataset/q5/solution/porfecha.json")
 
 }

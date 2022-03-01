@@ -1,5 +1,5 @@
 import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.functions.concat_ws
+import org.apache.spark.sql.functions.{col, concat_ws}
 import org.apache.spark.sql.types.StringType
 
 object exer6 extends App {
@@ -12,12 +12,12 @@ object exer6 extends App {
   implicit val sparkSession = Spark.createLocalSession
   implicit val custavro: DataFrame = MainRead.readAvro("src/main/resources/retail_db/customers-avro")
   //Comprobamos que esta bien
-  custavro.show
+  //custavro.show
   //Realizamos dicho filtro
-  val sol6 = custavro.select(custavro.col("customer_id").cast(StringType),concat_ws(" ", custavro.col("customer_fname") , custavro.col("customer_lname"))
+  val sol6 = custavro.select(custavro.col("customer_id").cast(StringType),concat_ws(" ", col("customer_fname") , col("customer_lname"))
     .cast(StringType).as("name"))
   //Como se puede observar nos da bien
-  sol6.show()
+  //sol6.show()
 
   //Lo guardamos
   sol6.write.option("codec", "org.apache.hadoop.io.compress.BZip2Codec").csv("dataset/q6/solution")

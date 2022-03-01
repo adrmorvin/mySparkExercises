@@ -1,4 +1,5 @@
 import org.apache.spark.sql._
+import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.types._
 object exer3 extends App {
   /*
@@ -26,12 +27,11 @@ object exer3 extends App {
 
 //Ahora que ya tenemos el schema, podemos leer los datos asignandole dicha cabecera
 
-
   implicit val customertabDF: DataFrame = MainRead.readCsvSchemaSpace("src/main/resources/retail_db/customers-tab-delimited/part-m-00000",myschema)
 
-  val conteo = customertabDF.filter(customertabDF("fname").startsWith("A")).groupBy("state").count().filter("count > 50")
+  val conteo = customertabDF.filter(col("fname").startsWith("A")).groupBy("state").count().filter(col("count").gt(50))
   //Comprobamos que esta bien
-  conteo.show()
+  //conteo.show()
 
 // Procedo a guardarlo como se me indica
   conteo.write.mode(SaveMode.Overwrite).option("codec", "org.apache.hadoop.io.compress.GzipCodec").parquet("dataset/q3/customer-replica.parquet")

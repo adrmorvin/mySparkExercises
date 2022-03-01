@@ -14,8 +14,8 @@ object MainRead {
   def readAvro(ruta:String)(implicit sparkSession: SparkSession)={
     sparkSession.read.format("com.databricks.spark.avro").load(ruta)
   }
-  def readParquet(ruta:String, myschema: StructType)(implicit sparkSession: SparkSession)= {
-    sparkSession.read.schema(myschema).option("header","true").load(ruta)
+  def readParquet(ruta:String)(implicit sparkSession: SparkSession)= {
+    sparkSession.read.option("header","true").load(ruta)
   }
   def suma (x:Int,y:Int):Int ={
     x+y
