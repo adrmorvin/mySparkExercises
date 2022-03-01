@@ -1,5 +1,6 @@
 import org.apache.spark.sql.{DataFrame, SaveMode}
 import org.apache.spark.sql.functions.{col, date_format, from_unixtime, month, to_date, year}
+import org.apache.spark.sql.types.TimestampType
 
 object exer5 extends App {
 
@@ -23,16 +24,20 @@ object exer5 extends App {
 // Comprobamos que los datos esten bien
  // ordersDF.show()
 
-  val ordDF = ordersDF.filter(col("order_status").equalTo("COMPLETE")).select(col("order_id"),
-      to_date(from_unixtime(col("order_date")/1000,"yyyy-MM-dd HH:mm:ss"),"yyyy-MM-dd HH:mm:ss").as("order_date"),
+  val ordDF = ordersDF.filter(col("order_status").equalTo("COMPLETE")).select(col("order_date"),col("order_id"),
+      to_date(from_unixtime(col("order_date")/1000,"yyyy-MM-dd HH:mm:ss"),"yyyy-MM-dd HH:mm:ss").as("order_date1"),
       col("order_status"))
-    val sol5 = ordDF.filter(year(col("order_date")).equalTo(2014) and
-      (month(col("order_date")).equalTo(1) or month(col("order_date")).equalTo(7)))
+        .withColumn( "newDate",to_date((col("order_date")/1000).cast(TimestampType)))
+  ordDF.show()
+   val sol5 = ordDF.filter(year(col("order_date1")).equalTo(2014) and
+      (month(col("newDate")).equalTo(1) or month(col("newDate")).equalTo(7)))
     .select(col("order_id"),
-      date_format(col("order_date"),"dd-MM-yyyy").as("order_date"),
-      col("order_status"))
+      date_format(col("newDate"),"dd-MM-yyyy").as("newDate"),
+      col("order_status"), col("order_date"))
+
+
 //Vemos que nos sale
- // sol5.show()
+  sol5.show()
 
 //Lo guardamos
   sol5.write.mode(SaveMode.Overwrite).json("dataset/q5/solution/porfecha.json")
