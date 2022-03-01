@@ -10,7 +10,7 @@ object exer6 extends App {
   * 4. Devolver el resultado por compresion bzip2
   * */
   implicit val sparkSession = Spark.createLocalSession
-  implicit val custavro: DataFrame = MainRead.readAvro("src/main/resources/retail_db/customers-avro")
+  val custavro: DataFrame = MainRead.readAvro("src/main/resources/retail_db/customers-avro")
   //Comprobamos que esta bien
   //custavro.show
   //Realizamos dicho filtro

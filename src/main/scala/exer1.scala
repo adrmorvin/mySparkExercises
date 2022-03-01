@@ -11,7 +11,7 @@ object exer1 extends App{
  * 4. Se espera que se use gZip compression
   */
   implicit val sparkSession = Spark.createLocalSession
-  implicit val productDF: DataFrame = MainRead.readAvro("src/main/resources/retail_db/products_avro/*")
+  val productDF: DataFrame = MainRead.readAvro("src/main/resources/retail_db/products_avro/")
   //Una vez que ya tenemos los datos observamos el schema
   productDF.printSchema()
   //Realizamos los filtros correspondientes (2-3)

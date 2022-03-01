@@ -27,7 +27,7 @@ object exer3 extends App {
 
 //Ahora que ya tenemos el schema, podemos leer los datos asignandole dicha cabecera
 
-  implicit val customertabDF: DataFrame = MainRead.readCsvSchemaSpace("src/main/resources/retail_db/customers-tab-delimited/part-m-00000",myschema)
+  val customertabDF: DataFrame = MainRead.readCsvSchemaSpace("src/main/resources/retail_db/customers-tab-delimited/part-m-00000",myschema)
 
   val conteo = customertabDF.filter(col("fname").startsWith("A")).groupBy("state").count().filter(col("count").gt(50))
   //Comprobamos que esta bien

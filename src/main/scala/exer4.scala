@@ -14,7 +14,7 @@ object exer4 extends App {
     StructField("id", StringType,true),
     StructField("departament_id", StringType,true),
     StructField("name", StringType,true)))
-  implicit val categoriesDF: DataFrame = MainRead.readCsvSchema("src/main/resources/retail_db/categories/part-m-00000",myschema)
+  val categoriesDF: DataFrame = MainRead.readCsvSchema("src/main/resources/retail_db/categories/part-m-00000",myschema)
   //Comprobamos que se ha creado bien
   //categoriesDF.show
   // Hacemos el filtro Soccer

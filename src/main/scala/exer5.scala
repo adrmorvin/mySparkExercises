@@ -20,7 +20,7 @@ object exer5 extends App {
     StructField("customer_id", IntegerType,true),
     StructField("order_status", StringType,true)))
 */
-  implicit val ordersDF: DataFrame = MainRead.readParquet("src/main/resources/retail_db/orders_parquet/741ca897-c70e-4633-b352-5dc3414c5680.parquet")
+  val ordersDF: DataFrame = MainRead.readParquet("src/main/resources/retail_db/orders_parquet/741ca897-c70e-4633-b352-5dc3414c5680.parquet")
 // Comprobamos que los datos esten bien
  // ordersDF.show()
 

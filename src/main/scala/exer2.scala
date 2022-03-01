@@ -10,7 +10,7 @@ object exer2 extends App {
  * 4. Se desea que el output esté separado por ":" y en un único archivo
  * */
   implicit val sparkSession = Spark.createLocalSession
-  implicit val categoriesDF: DataFrame = MainRead.readCsvHeader("src/main/resources/retail_db/categories-header")
+ val categoriesDF: DataFrame = MainRead.readCsvHeader("src/main/resources/retail_db/categories-header")
   //Ya tenemos el contenido en el valor categoriesDF
   val catgr= categoriesDF.select(col("category_id").cast("int"),col("category_name")).orderBy(desc("category_id"))
   //Tras los filtros obtenemos el resultado
